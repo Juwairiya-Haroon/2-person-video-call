@@ -16,7 +16,6 @@ export async function POST(req: Request) {
     const apiSecret = process.env.LIVEKIT_API_SECRET!;
     const livekitUrl = process.env.LIVEKIT_URL!;
 
-    // Generate the token
     const at = new AccessToken(apiKey, apiSecret, {
       identity: participantName,
     });
@@ -28,14 +27,12 @@ export async function POST(req: Request) {
       canSubscribe: true,
     });
 
-    const token = await at.toJwt();
-
     return NextResponse.json({
-      token,
+      token: await at.toJwt(),
       url: livekitUrl,
     });
   } catch (error) {
-    console.error(error);
+    console.error("TOKEN ERROR:", error);
     return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }
